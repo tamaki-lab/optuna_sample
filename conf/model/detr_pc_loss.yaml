@@ -1,0 +1,11 @@
+defaults:
+  - default_detr
+name: detr_pc_loss
+
+losses:
+  pc_loss_coefficient: 1.0
+  ce_threshold: 0.5
+  eos_coefficient: 0.1
+  ce_loss_coefficient: 1
+  bbox_loss_coefficient: 3
+  giou_loss_coefficient: 2

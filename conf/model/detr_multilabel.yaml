@@ -1,0 +1,14 @@
+defaults:
+  - default_detr
+
+name: detr_multilabel
+do_class_weighting: True
+
+losses:
+  bce_threshold: 0.5
+  ce_threshold: 0.5
+  bce_coefficient: 1.0
+  eos_coefficient: 0.1
+  ce_loss_coefficient: 1
+  bbox_loss_coefficient: 3
+  giou_loss_coefficient: 2

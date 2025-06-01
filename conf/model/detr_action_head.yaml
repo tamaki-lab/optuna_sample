@@ -1,0 +1,13 @@
+defaults:
+  - default_detr
+
+name: detr_action_head_with_objects
+
+out_image_feat_dim: 5
+
+losses:
+  ce_threshold: 0.5
+  eos_coefficient: 0.1
+  ce_loss_coefficient: 1
+  bbox_loss_coefficient: 3
+  giou_loss_coefficient: 2

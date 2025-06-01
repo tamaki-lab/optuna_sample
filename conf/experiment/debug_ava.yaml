@@ -1,0 +1,23 @@
+# @package _global_
+defaults:
+  - override /dataset: ava
+
+run:
+  name: "test"
+  tag: "test"
+  disable_comet: True
+  only_val: False
+  save_model_checkpoint: True
+  save_checkpoint_dir: "./experiment_logs"
+  resume_from_checkpoint: ""
+  val_videomap: True
+  val_framemap: True
+
+logging:
+  num_images_to_visualize: 8
+  num_true_tubes_to_visualize: 3
+  num_false_tubes_to_visualize: 3
+  save_tube_iou_thres: 0.5
+  save_made_tubes: false
+  log_videomap_summary: True
+  draw_no_class_pr_curve: True

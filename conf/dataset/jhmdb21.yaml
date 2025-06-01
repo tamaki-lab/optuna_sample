@@ -1,0 +1,3 @@
+name: jhmdb21
+detr_score_thres: 0.75
+frames: 21

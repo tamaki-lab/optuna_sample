@@ -1,0 +1,25 @@
+defaults:
+  - dataset: jhmdb21
+  - model: detr_action_head
+  - training: default_training
+  - logging: visualization
+  - _self_
+
+run:
+  name: "test"
+  tag: "test"
+  disable_comet: False
+  only_val: False
+  save_model_checkpoint: True
+  save_checkpoint_dir: "./experiment_logs"
+  resume_from_checkpoint: ""
+  val_videomap: True
+  val_framemap: True
+
+training:
+  num_epochs: 100
+  batch_size: 4
+
+evaluation:
+  val_epochs: 5
+  save_epochs: 5
