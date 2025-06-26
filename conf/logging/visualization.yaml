@@ -1,5 +1,0 @@
-do_visualization: false
-do_draw_tubes: false
-save_made_tubes: false
-log_videomap_summary: false
-draw_no_class_pr_curve: True

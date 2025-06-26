@@ -1,25 +1,56 @@
+# conf/config.yaml
+
 defaults:
-  - dataset: jhmdb21
-  - model: detr_action_head
-  - training: default_training
-  - logging: visualization
-  - _self_
+  - override hydra/sweeper: optuna
+  - override hydra/sweeper/sampler: tpe # デフォルトでTPEサンプラーを使用
 
-run:
-  name: "test"
-  tag: "test"
-  disable_comet: False
-  only_val: False
-  save_model_checkpoint: True
-  save_checkpoint_dir: "./experiment_logs"
-  resume_from_checkpoint: ""
-  val_videomap: True
-  val_framemap: True
+# アプリケーション固有のデフォルト設定
+# ここで定義する値は、Optunaが探索しない場合のデフォルト値や、
+# アプリケーションの他の部分で使用する設定に使えます。
+# 今回、model.alphaはOptunaの探索対象なので、ここでの定義は必須ではありません。
 
-training:
-  num_epochs: 100
-  batch_size: 4
+# データ生成に関する設定 (今回は固定値)
+data:
+  n_samples: 200
+  n_features: 5
+  noise: 0.5
+  random_state_data: 42
 
-evaluation:
-  val_epochs: 5
-  save_epochs: 5
+# クロスバリデーションの設定
+cv:
+  n_splits: 5
+  shuffle: true
+  random_state_cv: 123 # KFoldの再現性のため
+
+model:
+  alpha: 1.0
+
+hydra:
+  sweeper:
+    _target_: hydra_plugins.hydra_optuna_sweeper.optuna_sweeper.OptunaSweeper
+    study_name: ridge_cv_optimization
+    direction: minimize # 評価指標 (MSE) を最小化
+    storage: null       # 必要に応じてDBを指定 (例: "sqlite:///study_cv.db")
+    n_trials: 30        # 試行回数
+    n_jobs: 1           # 並列実行数
+
+    # 最適化するハイパーパラメータの定義
+    # `model.` のようにネスト構造にすると、cfgオブジェクト内でアクセスしやすくなります。
+    params:
+      model.alpha: "float(0.01, 10.0)" # Ridge回帰のalpha (対数スケールで探索)
+      # 他のモデルのパラメータもここに追加可能
+      # 例: RandomForestRegressorの場合
+      # model.n_estimators: "int(50, 200)"
+      # model.max_depth: "int(3, 10)"
+    pruner:
+      _target_: optuna.pruners.MedianPruner
+      n_startup_trials: 5       # 最初の5試行は枝刈りしない
+      n_warmup_steps: 0         # 学習の初期段階では枝刈りしないステップ数 (エポック数など)
+      interval_steps: 1
+
+  # 出力ディレクトリの設定
+  run:
+    dir: outputs/${now:%Y-%m-%d}/${now:%H-%M-%S} # シングルランの出力先 (今回は使われない)
+  sweep:
+    dir: multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}/${hydra.job.override_dirname} # マルチランの出力先
+    subdir: ${hydra.job.num} # 各試行のサブディレクトリ
