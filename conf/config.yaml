@@ -30,9 +30,9 @@ hydra:
     _target_: hydra_plugins.hydra_optuna_sweeper.optuna_sweeper.OptunaSweeper
     study_name: ridge_cv_optimization
     direction: minimize # 評価指標 (MSE) を最小化
-    storage: null       # 必要に応じてDBを指定 (例: "sqlite:///study_cv.db")
-    n_trials: 30        # 試行回数
-    n_jobs: 1           # 並列実行数
+    storage: null # 必要に応じてDBを指定 (例: "sqlite:///study_cv.db")
+    n_trials: 30 # 試行回数
+    n_jobs: 1 # 並列実行数
 
     # 最適化するハイパーパラメータの定義
     # `model.` のようにネスト構造にすると、cfgオブジェクト内でアクセスしやすくなります。
@@ -44,13 +44,13 @@ hydra:
       # model.max_depth: "int(3, 10)"
     pruner:
       _target_: optuna.pruners.MedianPruner
-      n_startup_trials: 5       # 最初の5試行は枝刈りしない
-      n_warmup_steps: 0         # 学習の初期段階では枝刈りしないステップ数 (エポック数など)
+      n_startup_trials: 5 # 最初の5試行は枝刈りしない
+      n_warmup_steps: 0 # 学習の初期段階では枝刈りしないステップ数 (エポック数など)
       interval_steps: 1
 
   # 出力ディレクトリの設定
   run:
-    dir: outputs/${now:%Y-%m-%d}/${now:%H-%M-%S} # シングルランの出力先 (今回は使われない)
+    dir: hydra_outputs/${now:%Y-%m-%d}/${now:%H-%M-%S} # シングルランの出力先 (今回は使われない)
   sweep:
     dir: multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}/${hydra.job.override_dirname} # マルチランの出力先
     subdir: ${hydra.job.num} # 各試行のサブディレクトリ
