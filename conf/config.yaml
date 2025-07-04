@@ -35,18 +35,12 @@ hydra:
     n_jobs: 1 # 並列実行数
 
     # 最適化するハイパーパラメータの定義
-    # `model.` のようにネスト構造にすると、cfgオブジェクト内でアクセスしやすくなります。
     params:
       model.alpha: "float(0.01, 10.0)" # Ridge回帰のalpha (対数スケールで探索)
       # 他のモデルのパラメータもここに追加可能
       # 例: RandomForestRegressorの場合
       # model.n_estimators: "int(50, 200)"
       # model.max_depth: "int(3, 10)"
-    pruner:
-      _target_: optuna.pruners.MedianPruner
-      n_startup_trials: 5 # 最初の5試行は枝刈りしない
-      n_warmup_steps: 0 # 学習の初期段階では枝刈りしないステップ数 (エポック数など)
-      interval_steps: 1
 
   # 出力ディレクトリの設定
   run:
